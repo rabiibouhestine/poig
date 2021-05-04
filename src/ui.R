@@ -22,7 +22,7 @@ ui <- fluidPage(
            fluidRow(
              column(12,
                     wellPanel(
-                      sliderInput("life", label = "life", min = 0, max = 10, value = 10)
+                      sliderInput("life", label = "life", min = 0, max = 100000, value = 100000)
                     )
              )
            ),
