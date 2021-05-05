@@ -1,4 +1,4 @@
-Name,Type,Latitude,Longitude,Location,Wikipedia link,Picture link,Build in year
+Name,Type,latitude,longitude,Location,Wikipedia link,Picture link,Build in year
 Great Pyramid of Giza,Ancient,29.97916667,31.13416667,"Giza Necropolis, Egypt",http://en.wikipedia.org/wiki/Great_Pyramid_of_Giza,http://upload.wikimedia.org/wikipedia/commons/thumb/e/e3/Kheops-Pyramid.jpg/300px-Kheops-Pyramid.jpg,2560 BC
 Stonehenge,Medieval,51.17861111,-1.826111111,"Amesbury, United Kingdom",http://en.wikipedia.org/wiki/Stonehenge,http://upload.wikimedia.org/wikipedia/commons/thumb/f/f2/Stonehenge%2C_Condado_de_Wiltshire%2C_Inglaterra%2C_2014-08-12%2C_DD_09.JPG/285px-Stonehenge%2C_Condado_de_Wiltshire%2C_Inglaterra%2C_2014-08-12%2C_DD_09.JPG,2400 BC
 Lighthouse of Alexandria,Ancient,31.21388889,29.88555556," Alexandria, Egypt",http://en.wikipedia.org/wiki/Lighthouse_of_Alexandria,http://upload.wikimedia.org/wikipedia/commons/thumb/2/2e/Lighthouse_-_Thiersch.gif/220px-Lighthouse_-_Thiersch.gif,280 BC

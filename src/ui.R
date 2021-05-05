@@ -1,13 +1,19 @@
 # Define UI for app that draws a histogram ----
 ui <- fluidPage(
-  
-  titlePanel("Point of Interest Guesser"),
+  tags$head(
+    tags$style(HTML("
+      .btn {
+        margin-bottom: 20px !important;
+      }"))
+  ),
+  shinyjs::useShinyjs(),
+  titlePanel("WondeR GuesseR"),
   
   fluidRow(
     
     column(9,
            wellPanel(
-             leafletOutput("map", height = 800)
+             mapUI("map")
            )
     ),
     
@@ -15,7 +21,14 @@ ui <- fluidPage(
            fluidRow(
              column(12,
                     wellPanel(
-                      textOutput("score")
+                      uiOutput("wonder_image")
+                    )
+             )
+           ),
+           fluidRow(
+             column(12,
+                    wellPanel(
+                      sliderInput("wonders", label = "wonders", min = 0, max = 50, value = 0)
                     )
              )
            ),
@@ -29,43 +42,37 @@ ui <- fluidPage(
            fluidRow(
              column(12,
                     wellPanel(
-                      actionButton(
-                        inputId = "help.btn",
-                        label = "Help",
-                        icon = NULL,
-                        width = "100%"
-                        )
+                      textOutput("score")
                     )
              )
            ),
            fluidRow(
              column(12,
-                    wellPanel(
-                      uiOutput("wonder_image")
+                    actionButton(
+                      inputId = "rules.btn",
+                      label = "Rules",
+                      icon = NULL,
+                      width = "100%"
                     )
              )
            ),
            fluidRow(
              column(12,
-                    wellPanel(
-                      actionButton(
-                        inputId = "rules.btn",
-                        label = "Rules",
-                        icon = NULL,
-                        width = "100%"
-                      )
+                    actionButton(
+                      inputId = "help.btn",
+                      label = "Help (3)",
+                      icon = NULL,
+                      width = "100%"
                     )
              )
            ),
            fluidRow(
              column(12,
-                    wellPanel(
-                      actionButton(
-                        inputId = "start.btn",
-                        label = "Start",
-                        icon = NULL,
-                        width = "100%"
-                      )
+                    actionButton(
+                      inputId = "start.btn",
+                      label = "Start",
+                      icon = NULL,
+                      width = "100%"
                     )
              )
            )
