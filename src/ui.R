@@ -8,7 +8,7 @@ ui <- fluidPage(
   ),
   shinyjs::useShinyjs(),
   titlePanel("WondeR GuesseR"),
-  
+  reactOutput("level_panel"),
   fluidRow(
     
     column(9,
@@ -20,9 +20,7 @@ ui <- fluidPage(
     column(3,
            fluidRow(
              column(12,
-                    wellPanel(
-                      uiOutput("wonder_image")
-                    )
+                    uiOutput("wonder_image")
              )
            ),
            fluidRow(

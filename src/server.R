@@ -16,6 +16,8 @@ server <- function(input, output, session) {
   current_wonder_image <- reactiveVal(game_manager$picture)
   current_wonder <- reactiveVal(game_manager$wonder_id)
   game_in_progress <- reactiveVal(FALSE)
+  
+  is_level_panel_open <- reactiveVal(FALSE)
 
   # RENDER MAP
   map <- mapServer("map", wow, reactive(game_in_progress()), reactive(current_wonder()))
@@ -100,6 +102,18 @@ server <- function(input, output, session) {
     rules_modal()
   })
 
+  # RENDER LEVEL PANEL
+  output$level_panel <- renderReact({
+    Panel(
+      headerText = "Sample panel",
+      isOpen = is_level_panel_open(),
+      paste0("Distance: ", distance()),
+      PrimaryButton.shinyInput("next_level", text = "Next Wonder >"),
+      onDismiss = JS("function() { Shiny.setInputValue('next_level', Math.random()); }"),
+      customWidth = "400px"
+    )
+  })
+
   # START/RESET BUTTON LOGIC
   observeEvent(input$start.btn,{
     if (game_in_progress()) {
@@ -122,6 +136,7 @@ server <- function(input, output, session) {
   # TRIGGER NEXT LEVEL
   observe({
     game_events$next_level()  # Triggers this observer
+    is_level_panel_open(FALSE)
     removeModal()
     game_manager$make_level()
     current_wonder(game_manager$wonder_id)
@@ -166,6 +181,8 @@ server <- function(input, output, session) {
       life(game_manager$life)
       distance(game_manager$distance)
       
+      is_level_panel_open(TRUE)
+      
       if(life() == 0 || wonders() == 50) {
         showModal(
           modalDialog(
@@ -178,20 +195,10 @@ server <- function(input, output, session) {
             )
           )
         )
-      } else {
-        showModal(
-          modalDialog(
-            title = paste0("Distance: ", distance()),
-            easyClose = FALSE,
-            size = "m",
-            footer = tagList(
-              actionButton("next_level", "Next >")
-            )
-          )
-        )
-      }
-      
+      } 
     }
   })
   
+  
+
 }
