@@ -33,7 +33,8 @@ ui <- fluidPage(
                         title = "wonders played",
                         value = 0,
                         total = 50,
-                        status = "primary"
+                        status = "primary",
+                        display_pct = TRUE
                       )
                     )
              )
