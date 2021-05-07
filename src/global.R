@@ -4,6 +4,7 @@ library(raster)
 library(modules)
 library(shinyjs)
 library(shinyWidgets)
+library(shiny.fluent)
 
 source("modules/map.R")
 

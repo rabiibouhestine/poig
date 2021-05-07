@@ -20,6 +20,11 @@ server <- function(input, output, session) {
   # RENDER MAP
   map <- mapServer("map", wow, reactive(game_in_progress()), reactive(current_wonder()))
 
+  # WONDER IMAGE
+  output$wonder_image <- renderUI({
+    tags$img(height = 240, width = "100%", src = current_wonder_image())
+  })
+
   # SCORE TEXT
   output$score <- renderText({
     paste0("Score: ", score())
@@ -73,11 +78,6 @@ server <- function(input, output, session) {
     } else {
       shinyjs::enable('help.btn')
     }
-  })
-
-  # WONDER IMAGE
-  output$wonder_image <- renderUI({
-    tags$img(height = 240, width = "100%", src = current_wonder_image())
   })
 
   # RULES MODAL
