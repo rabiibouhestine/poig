@@ -119,7 +119,6 @@ server <- function(input, output, session) {
     )
     Dialog(
       hidden = !is_game_over_modal_open(),
-      onDismiss = JS("function() { Shiny.setInputValue('hide_game_over', Math.random()); }"),
       dialogContentProps = dialogContentProps,
       modalProps = list(),
       DialogFooter(
@@ -130,7 +129,6 @@ server <- function(input, output, session) {
 
   # SHOW/HIDE GAME OVER MODAL
   observeEvent(input$reset_game, is_game_over_modal_open(FALSE))
-  observeEvent(input$hide_game_over, is_game_over_modal_open(FALSE))
 
   # RENDER RULES MODAL
   output$rules_modal <- renderReact({
@@ -142,7 +140,6 @@ server <- function(input, output, session) {
     )
     Dialog(
       hidden = !is_rules_modal_open(),
-      onDismiss = JS("function() { Shiny.setInputValue('hide_rules', Math.random()); }"),
       dialogContentProps = dialogContentProps,
       modalProps = list(),
       DialogFooter(
@@ -154,7 +151,6 @@ server <- function(input, output, session) {
   # SHOW/HIDE RULES MODAL
   observeEvent(input$rules.btn, is_rules_modal_open(TRUE))
   observeEvent(input$rules_ok, is_rules_modal_open(FALSE))
-  observeEvent(input$hide_rules, is_rules_modal_open(FALSE))
 
   # RENDER RULES BUTTON
   output$rules_btn <- renderReact({
