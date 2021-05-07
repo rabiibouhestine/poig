@@ -6,7 +6,7 @@ ui <- fluidPage(
         margin-bottom: 20px !important;
       }"))
   ),
-  shinyjs::useShinyjs(),
+
   titlePanel("WondeR GuesseR"),
   reactOutput("level_panel"),
   fluidRow(
@@ -61,32 +61,17 @@ ui <- fluidPage(
            ),
            fluidRow(
              column(12,
-                    actionButton(
-                      inputId = "rules.btn",
-                      label = "Rules",
-                      icon = NULL,
-                      width = "100%"
-                    )
+                    reactOutput("rules_btn")
              )
            ),
            fluidRow(
              column(12,
-                    actionButton(
-                      inputId = "help.btn",
-                      label = "Help (3)",
-                      icon = NULL,
-                      width = "100%"
-                    )
+                    reactOutput("help_btn")
              )
            ),
            fluidRow(
              column(12,
-                    actionButton(
-                      inputId = "start.btn",
-                      label = "Start",
-                      icon = NULL,
-                      width = "100%"
-                    )
+                    reactOutput("start_btn")
              )
            )
     )

@@ -18,6 +18,8 @@ server <- function(input, output, session) {
   game_in_progress <- reactiveVal(FALSE)
   
   is_level_panel_open <- reactiveVal(FALSE)
+  is_help_button_disabled <- reactiveVal(TRUE)
+  start_button_text <- reactiveVal("Start")
 
   # RENDER MAP
   map <- mapServer("map", wow, reactive(game_in_progress()), reactive(current_wonder()))
@@ -83,16 +85,12 @@ server <- function(input, output, session) {
     map$show_help()
   })
 
-  # UPDATE HELP BUTTON LABEL
+  # HELP BUTTON ENABLE/DISABLE
   observe({
-    updateActionButton(
-      inputId = "help.btn",
-      label = paste0("Help (", help(), ")")
-    )
     if(help() == 0 || !game_in_progress()) {
-      shinyjs::disable('help.btn')
+      is_help_button_disabled(TRUE)
     } else {
-      shinyjs::enable('help.btn')
+      is_help_button_disabled(FALSE)
     }
   })
 
@@ -111,6 +109,34 @@ server <- function(input, output, session) {
       PrimaryButton.shinyInput("next_level", text = "Next Wonder >"),
       onDismiss = JS("function() { Shiny.setInputValue('next_level', Math.random()); }"),
       customWidth = "400px"
+    )
+  })
+
+  # RENDER RULES BUTTON
+  output$rules_btn <- renderReact({
+    PrimaryButton.shinyInput(
+      "rules.btn",
+      text = "Rules",
+      iconProps = list("iconName" = "AddFriend")
+    )
+  })
+
+  # RENDER HELP BUTTON
+  output$help_btn <- renderReact({
+    PrimaryButton.shinyInput(
+      "help.btn",
+      text = paste0("Help (", help()," )"),
+      disabled = is_help_button_disabled(),
+      iconProps = list("iconName" = "AddFriend")
+    )
+  })
+
+  # RENDER START BUTTON
+  output$start_btn <- renderReact({
+    PrimaryButton.shinyInput(
+      "start.btn",
+      text = start_button_text(),
+      iconProps = list("iconName" = "AddFriend")
     )
   })
 
@@ -143,10 +169,7 @@ server <- function(input, output, session) {
     current_wonder_image(game_manager$picture)
     map$start_level()
     game_in_progress(TRUE)
-    updateActionButton(
-      inputId = "start.btn",
-      label = "Reset"
-    )
+    start_button_text("Reset")
   })
 
   # TRIGGER RESET GAME
@@ -161,10 +184,7 @@ server <- function(input, output, session) {
     current_wonder_image(game_manager$picture)
     map$initialise()
     game_in_progress(FALSE)
-    updateActionButton(
-      inputId = "start.btn",
-      label = "Start"
-    )
+    start_button_text("Start")
   })
   
   # GAMEPLAY LOGIC
