@@ -27,17 +27,31 @@ server <- function(input, output, session) {
 
   # LIFE INDICATOR
   observeEvent(wonders(), {
-    updateSliderInput(
-      inputId = "wonders",
-      value = wonders()
-    )
+    updateProgressBar(
+      session = session,
+      id = "wonders",
+      value = wonders(),
+      total = 50
+      )
   })
 
   # LIFE INDICATOR
   observeEvent(life(), {
-    updateSliderInput(
-      inputId = "life",
-      value = life()
+    if (life() < 25000) {
+      status <- "danger"
+    } else if (life() >= 25000 & life() < 50000) {
+      status <- "warning"
+    } else if (life() >= 50000 & life() < 75000) {
+      status <- "info"
+    } else {
+      status <- "success"
+    }
+    updateProgressBar(
+      session = session,
+      id = "life",
+      value = life(),
+      total = 100000,
+      status = status
     )
   })
 

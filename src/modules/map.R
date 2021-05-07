@@ -13,15 +13,15 @@ mapServer <- function(id, data, game_in_progress = FALSE, wonder = NULL) {
     function(input, output, session) {
 
       # ICONS
-      crossIcon <- makeIcon(
+      crossIcon <- leaflet::makeIcon(
         iconUrl = "http://simpleicon.com/wp-content/uploads/cross.png",
         iconWidth = 50, iconHeight = 50
       )
-      wonderIcon <- makeIcon(
+      wonderIcon <- leaflet::makeIcon(
         iconUrl = "https://static.thenounproject.com/png/7224-200.png",
         iconWidth = 50, iconHeight = 50
       )
-      helpIcon <- makeIcon(
+      helpIcon <- leaflet::makeIcon(
         iconUrl = "https://toppng.com/uploads/preview/question-mark-icon-png-1155224288245ptwi4q2v.png",
         iconWidth = 50, iconHeight = 50
       )
@@ -47,7 +47,7 @@ mapServer <- function(id, data, game_in_progress = FALSE, wonder = NULL) {
           addMarkers(
             lng = ~longitude,
             lat = ~latitude,
-            icon = makeIcon(
+            icon = leaflet::makeIcon(
               iconUrl = ~Picture.link,
               iconWidth = 50, iconHeight = 50
             )
@@ -98,7 +98,7 @@ mapServer <- function(id, data, game_in_progress = FALSE, wonder = NULL) {
               data = wonder_data,
               lng = ~longitude,
               lat = ~latitude,
-              icon =  makeIcon(
+              icon =  leaflet::makeIcon(
                 iconUrl = ~Picture.link,
                 iconWidth = 50, iconHeight = 50
               )

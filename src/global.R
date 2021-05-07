@@ -3,6 +3,7 @@ library(leaflet.providers)
 library(raster)
 library(modules)
 library(shinyjs)
+library(shinyWidgets)
 
 source("modules/map.R")
 

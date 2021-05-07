@@ -28,14 +28,28 @@ ui <- fluidPage(
            fluidRow(
              column(12,
                     wellPanel(
-                      sliderInput("wonders", label = "wonders", min = 0, max = 50, value = 0)
+                      progressBar(
+                        id = "wonders",
+                        title = "wonders played",
+                        value = 0,
+                        total = 50,
+                        status = "primary"
+                      )
                     )
              )
            ),
            fluidRow(
              column(12,
                     wellPanel(
-                      sliderInput("life", label = "life", min = 0, max = 100000, value = 100000)
+                      progressBar(
+                        id = "life",
+                        title = "distance used (km)",
+                        value = 0,
+                        total = 100000,
+                        status = "sucess",
+                        display_pct = TRUE,
+                        striped = TRUE
+                      )
                     )
              )
            ),
