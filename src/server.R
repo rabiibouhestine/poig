@@ -17,9 +17,12 @@ server <- function(input, output, session) {
   current_wonder <- reactiveVal(game_manager$wonder_id)
   game_in_progress <- reactiveVal(FALSE)
   
+  is_rules_modal_open <- reactiveVal(TRUE)
+  is_game_over_modal_open <- reactiveVal(FALSE)
   is_level_panel_open <- reactiveVal(FALSE)
   is_help_button_disabled <- reactiveVal(TRUE)
   start_button_text <- reactiveVal("Start")
+  start_button_icon <- reactiveVal("play")
 
   # RENDER MAP
   map <- mapServer("map", wow, reactive(game_in_progress()), reactive(current_wonder()))
@@ -94,12 +97,6 @@ server <- function(input, output, session) {
     }
   })
 
-  # RULES MODAL
-  session$onFlushed( function() rules_modal(), once = TRUE )
-  observeEvent(input$rules.btn, {
-    rules_modal()
-  })
-
   # RENDER LEVEL PANEL
   output$level_panel <- renderReact({
     Panel(
@@ -112,12 +109,59 @@ server <- function(input, output, session) {
     )
   })
 
+  # RENDER GAME OVER MODAL
+  output$game_over_modal <- renderReact({
+    dialogContentProps <- list(
+      type=0,
+      title='GAME OVER',
+      closeButtonAriaLabel='Close',
+      subText='Do you want to send this message without a subject?'
+    )
+    Dialog(
+      hidden = !is_game_over_modal_open(),
+      onDismiss = JS("function() { Shiny.setInputValue('hide_game_over', Math.random()); }"),
+      dialogContentProps = dialogContentProps,
+      modalProps = list(),
+      DialogFooter(
+        PrimaryButton.shinyInput("reset_game", text = "Restart")
+      )
+    )
+  })
+
+  # SHOW/HIDE GAME OVER MODAL
+  observeEvent(input$reset_game, is_game_over_modal_open(FALSE))
+  observeEvent(input$hide_game_over, is_game_over_modal_open(FALSE))
+
+  # RENDER RULES MODAL
+  output$rules_modal <- renderReact({
+    dialogContentProps <- list(
+      type=0,
+      title='Missing Subject',
+      closeButtonAriaLabel='Close',
+      subText='Do you want to send this message without a subject?'
+    )
+    Dialog(
+      hidden = !is_rules_modal_open(),
+      onDismiss = JS("function() { Shiny.setInputValue('hide_rules', Math.random()); }"),
+      dialogContentProps = dialogContentProps,
+      modalProps = list(),
+      DialogFooter(
+        PrimaryButton.shinyInput("rules_ok", text = "Got it!")
+      )
+    )
+  })
+
+  # SHOW/HIDE RULES MODAL
+  observeEvent(input$rules.btn, is_rules_modal_open(TRUE))
+  observeEvent(input$rules_ok, is_rules_modal_open(FALSE))
+  observeEvent(input$hide_rules, is_rules_modal_open(FALSE))
+
   # RENDER RULES BUTTON
   output$rules_btn <- renderReact({
     PrimaryButton.shinyInput(
       "rules.btn",
       text = "Rules",
-      iconProps = list("iconName" = "AddFriend")
+      iconProps = list("iconName" = "TextDocument")
     )
   })
 
@@ -127,7 +171,7 @@ server <- function(input, output, session) {
       "help.btn",
       text = paste0("Help (", help()," )"),
       disabled = is_help_button_disabled(),
-      iconProps = list("iconName" = "AddFriend")
+      iconProps = list("iconName" = "Nav2DMapView")
     )
   })
 
@@ -136,7 +180,7 @@ server <- function(input, output, session) {
     PrimaryButton.shinyInput(
       "start.btn",
       text = start_button_text(),
-      iconProps = list("iconName" = "AddFriend")
+      iconProps = list("iconName" = start_button_icon())
     )
   })
 
@@ -163,19 +207,18 @@ server <- function(input, output, session) {
   observe({
     game_events$next_level()  # Triggers this observer
     is_level_panel_open(FALSE)
-    removeModal()
     game_manager$make_level()
     current_wonder(game_manager$wonder_id)
     current_wonder_image(game_manager$picture)
     map$start_level()
     game_in_progress(TRUE)
     start_button_text("Reset")
+    start_button_icon("PlaybackRate1x")
   })
 
   # TRIGGER RESET GAME
   observe({
     game_events$reset_game() # Triggers this observer
-    removeModal()
     game_manager$reset()
     score(game_manager$score)
     wonders(game_manager$wonders)
@@ -185,37 +228,24 @@ server <- function(input, output, session) {
     map$initialise()
     game_in_progress(FALSE)
     start_button_text("Start")
+    start_button_icon("Play")
   })
   
   # GAMEPLAY LOGIC
   observeEvent(map$click(), {
     if (game_in_progress()) {
-      
-      game_manager$update_state(
-        map$click()$lng,
-        map$click()$lat
-      )
-      
+      # update game session variables
+      game_manager$update_state(map$click()$lng, map$click()$lat)
       score(game_manager$score)
       wonders(game_manager$wonders)
       life(game_manager$life)
       distance(game_manager$distance)
-      
-      is_level_panel_open(TRUE)
-      
+      # show/hide modals
       if(life() == 0 || wonders() == 50) {
-        showModal(
-          modalDialog(
-            title = "Game Over",
-            paste0("Score: ", score()),
-            easyClose = FALSE,
-            size = "m",
-            footer = tagList(
-              actionButton("reset_game", "Restart")
-            )
-          )
-        )
-      } 
+        is_game_over_modal_open(TRUE)
+      } else {
+        is_level_panel_open(TRUE)
+      }
     }
   })
   

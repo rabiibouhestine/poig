@@ -35,16 +35,3 @@ GameEventReactiveTrigger <- function() {
     }
   )
 }
-
-
-rules_modal <- function() {
-  showModal(
-    modalDialog(
-      title = "Game RULES",
-      easyClose = TRUE,
-      size = "l",
-      footer = tagList(
-      )
-    )
-  )
-}

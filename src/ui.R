@@ -8,7 +8,11 @@ ui <- fluidPage(
   ),
 
   titlePanel("WondeR GuesseR"),
+
   reactOutput("level_panel"),
+  reactOutput("rules_modal"),
+  reactOutput("game_over_modal"),
+
   fluidRow(
     
     column(9,
