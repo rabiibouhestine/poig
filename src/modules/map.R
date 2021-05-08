@@ -3,7 +3,7 @@
 # Define the UI for a module
 mapUI <- function(id) {
   ns <- NS(id)
-  leafletOutput(ns("map"), height = 800)
+  leafletOutput(ns("map"), height = 600)
 }
 
 # Define the server logic for a module

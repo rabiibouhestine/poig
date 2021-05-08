@@ -24,7 +24,9 @@ ui <- fluidPage(
     column(3,
            fluidRow(
              column(12,
-                    uiOutput("wonder_image")
+                    wellPanel(
+                      uiOutput("wonder_image")
+                    )
              )
            ),
            fluidRow(
@@ -65,17 +67,14 @@ ui <- fluidPage(
            ),
            fluidRow(
              column(12,
-                    reactOutput("rules_btn")
-             )
-           ),
-           fluidRow(
-             column(12,
-                    reactOutput("help_btn")
-             )
-           ),
-           fluidRow(
-             column(12,
-                    reactOutput("start_btn")
+                    Stack(
+                      reactOutput("rules_btn"),
+                      reactOutput("help_btn"),
+                      reactOutput("start_btn"),
+                      horizontal = TRUE,
+                      tokens = list(childrenGap = 20)
+                    )
+                    
              )
            )
     )

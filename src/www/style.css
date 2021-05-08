@@ -1,0 +1,49 @@
+.main-page {
+  background: grey;
+  height: 100vh;
+  width: 100vw;
+  padding: 20px;
+  
+  display: grid;
+  gap: 20px;
+  
+  grid-template-areas:
+  "wonder_card wonders life score"
+  "wonder_card map map map"
+  "wonder_card rules help start";
+  
+  grid-template-rows: 1fr 3fr;
+  grid-template-columns: 200px 1fr 200px;
+}
+
+.main-page .wonder-card {
+  grid-area: wonder_card;
+}
+
+.main-page .wonders {
+  grid-area: wonders;
+}
+
+.main-page .life {
+  grid-area: life;
+}
+
+.main-page .score {
+  grid-area: score;
+}
+
+.main-page .map {
+  grid-area: map;
+}
+
+.main-page .rules {
+  grid-area: rules;
+}
+
+.main-page .help {
+  grid-area: help;
+}
+
+.main-page .start {
+  grid-area: start;
+}

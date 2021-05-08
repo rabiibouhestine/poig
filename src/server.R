@@ -29,21 +29,7 @@ server <- function(input, output, session) {
 
   # WONDER IMAGE
   output$wonder_image <- renderUI({
-    DocumentCard(
-      DocumentCardPreview(
-        previewImages = list(
-          list(
-            previewImageSrc = current_wonder_image(),
-            width = "100%",
-            height = 240
-          )
-        )
-      ),
-      DocumentCardActivity(
-        activity = "Created a few minutes ago",
-        people = list(list(name = "Wonder Full Name"))
-      )
-    )
+    tags$img(height = 240, width = "100%", src = current_wonder_image())
   })
 
   # SCORE TEXT
