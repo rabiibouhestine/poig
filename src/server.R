@@ -29,7 +29,7 @@ server <- function(input, output, session) {
   # WONDER IMAGE
   output$wonder_image <- renderUI({
     if(game_in_progress()){
-      div(
+      Stack(
         img(height = 240, width = "100%", src = current_wonder_image()),
         Stack(
           PrimaryButton.shinyInput(
@@ -44,7 +44,9 @@ server <- function(input, output, session) {
           ),
           horizontal = TRUE,
           tokens = list(childrenGap = 20)
-        )
+        ),
+        horizontal = FALSE,
+        tokens = list(childrenGap = 20)
       )
     } else {
       "text"
