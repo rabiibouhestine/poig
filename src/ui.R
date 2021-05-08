@@ -2,25 +2,20 @@
 ui <- fluidPage(
   tags$head(
     tags$style(HTML("
-      .btn {
-        margin-bottom: 20px !important;
+      .container-fluid {
+        padding-top: 50px !important;
       }"))
   ),
 
-  titlePanel("WondeR GuesseR"),
-
-  reactOutput("level_panel"),
   reactOutput("rules_modal"),
   reactOutput("game_over_modal"),
 
   fluidRow(
-    
-    column(9,
+    column(7, offset = 1,
            wellPanel(
              mapUI("map")
            )
     ),
-    
     column(3,
            fluidRow(
              column(12,
@@ -69,7 +64,6 @@ ui <- fluidPage(
              column(12,
                     Stack(
                       reactOutput("rules_btn"),
-                      reactOutput("help_btn"),
                       reactOutput("start_btn"),
                       horizontal = TRUE,
                       tokens = list(childrenGap = 20)

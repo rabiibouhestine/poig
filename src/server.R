@@ -19,7 +19,6 @@ server <- function(input, output, session) {
   
   is_rules_modal_open <- reactiveVal(TRUE)
   is_game_over_modal_open <- reactiveVal(FALSE)
-  is_level_panel_open <- reactiveVal(FALSE)
   is_help_button_disabled <- reactiveVal(TRUE)
   start_button_text <- reactiveVal("Start")
   start_button_icon <- reactiveVal("play")
@@ -29,7 +28,27 @@ server <- function(input, output, session) {
 
   # WONDER IMAGE
   output$wonder_image <- renderUI({
-    tags$img(height = 240, width = "100%", src = current_wonder_image())
+    if(game_in_progress()){
+      div(
+        img(height = 240, width = "100%", src = current_wonder_image()),
+        Stack(
+          PrimaryButton.shinyInput(
+            "help.btn",
+            text = paste0("Help (", help()," )"),
+            disabled = is_help_button_disabled(),
+            iconProps = list("iconName" = "Nav2DMapView")
+          ),
+          PrimaryButton.shinyInput(
+            "next_level",
+            text = "Next Wonder >"
+          ),
+          horizontal = TRUE,
+          tokens = list(childrenGap = 20)
+        )
+      )
+    } else {
+      "text"
+    }
   })
 
   # SCORE TEXT
@@ -81,18 +100,6 @@ server <- function(input, output, session) {
     } else {
       is_help_button_disabled(FALSE)
     }
-  })
-
-  # RENDER LEVEL PANEL
-  output$level_panel <- renderReact({
-    Panel(
-      headerText = "Sample panel",
-      isOpen = is_level_panel_open(),
-      paste0("Distance: ", distance()),
-      PrimaryButton.shinyInput("next_level", text = "Next Wonder >"),
-      onDismiss = JS("function() { Shiny.setInputValue('next_level', Math.random()); }"),
-      customWidth = "400px"
-    )
   })
 
   # RENDER GAME OVER MODAL
@@ -147,16 +154,6 @@ server <- function(input, output, session) {
     )
   })
 
-  # RENDER HELP BUTTON
-  output$help_btn <- renderReact({
-    PrimaryButton.shinyInput(
-      "help.btn",
-      text = paste0("Help (", help()," )"),
-      disabled = is_help_button_disabled(),
-      iconProps = list("iconName" = "Nav2DMapView")
-    )
-  })
-
   # RENDER START BUTTON
   output$start_btn <- renderReact({
     PrimaryButton.shinyInput(
@@ -188,7 +185,6 @@ server <- function(input, output, session) {
   # TRIGGER NEXT LEVEL
   observe({
     game_events$next_level()  # Triggers this observer
-    is_level_panel_open(FALSE)
     game_manager$make_level()
     current_wonder(game_manager$wonder_id)
     current_wonder_image(game_manager$picture)
@@ -226,7 +222,6 @@ server <- function(input, output, session) {
       if(life() == 0 || wonders() == 50) {
         is_game_over_modal_open(TRUE)
       } else {
-        is_level_panel_open(TRUE)
       }
     }
   })
