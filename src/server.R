@@ -30,6 +30,7 @@ server <- function(input, output, session) {
   output$wonder_image <- renderUI({
     if(game_in_progress()){
       Stack(
+        h6("Locate this wonder on the map"),
         img(height = 240, width = "100%", src = current_wonder_image()),
         Stack(
           PrimaryButton.shinyInput(
@@ -49,7 +50,7 @@ server <- function(input, output, session) {
         tokens = list(childrenGap = 20)
       )
     } else {
-      "text"
+      h1("WondeR GuesseR")
     }
   })
 
