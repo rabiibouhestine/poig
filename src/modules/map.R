@@ -7,7 +7,7 @@ mapUI <- function(id) {
 }
 
 # Define the server logic for a module
-mapServer <- function(id, data, game_in_progress = FALSE, wonder = NULL) {
+mapServer <- function(id, data, is_level_in_progress = FALSE, wonder = NULL) {
   moduleServer(
     id,
     function(input, output, session) {
@@ -91,7 +91,7 @@ mapServer <- function(id, data, game_in_progress = FALSE, wonder = NULL) {
 
       # MAP CLICK EVENT
       observeEvent(input$map_click, {
-        if(isTRUE(game_in_progress())){
+        if(isTRUE(is_level_in_progress())){
           wonder_data <- data[wonder(),]
           leafletProxy("map", session) %>%
             addMarkers(

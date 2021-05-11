@@ -15,20 +15,22 @@ server <- function(input, output, session) {
   distance <- reactiveVal(game_manager$distance)
   current_wonder_image <- reactiveVal(game_manager$picture)
   current_wonder <- reactiveVal(game_manager$wonder_id)
-  game_in_progress <- reactiveVal(FALSE)
-  
+
+  is_game_in_progress <- reactiveVal(FALSE)
   is_rules_modal_open <- reactiveVal(TRUE)
   is_game_over_modal_open <- reactiveVal(FALSE)
-  is_help_button_disabled <- reactiveVal(TRUE)
+  is_help_button_disabled <- reactiveVal(FALSE)
+  is_level_in_progress <- reactiveVal(FALSE)
+
   start_button_text <- reactiveVal("Start")
   start_button_icon <- reactiveVal("play")
 
   # RENDER MAP
-  map <- mapServer("map", wow, reactive(game_in_progress()), reactive(current_wonder()))
+  map <- mapServer("map", wow, reactive(is_level_in_progress()), reactive(current_wonder()))
 
   # WONDER IMAGE
   output$wonder_image <- renderUI({
-    if(game_in_progress()){
+    if(is_game_in_progress()){
       Stack(
         h6("Locate this wonder on the map"),
         img(height = 240, width = "100%", src = current_wonder_image()),
@@ -41,7 +43,8 @@ server <- function(input, output, session) {
           ),
           PrimaryButton.shinyInput(
             "next_level",
-            text = "Next Wonder >"
+            text = "Next Wonder >",
+            disabled = is_level_in_progress()
           ),
           horizontal = TRUE,
           tokens = list(childrenGap = 20)
@@ -91,18 +94,10 @@ server <- function(input, output, session) {
 
   # HELP BUTTON LOGIC
   observeEvent(input$help.btn, {
+    is_help_button_disabled(TRUE)
     game_manager$use_help()
     help(game_manager$help)
     map$show_help()
-  })
-
-  # HELP BUTTON ENABLE/DISABLE
-  observe({
-    if(help() == 0 || !game_in_progress()) {
-      is_help_button_disabled(TRUE)
-    } else {
-      is_help_button_disabled(FALSE)
-    }
   })
 
   # RENDER GAME OVER MODAL
@@ -168,9 +163,11 @@ server <- function(input, output, session) {
 
   # START/RESET BUTTON LOGIC
   observeEvent(input$start.btn,{
-    if (game_in_progress()) {
+    if (is_game_in_progress()) {
+      is_game_in_progress(FALSE)
       game_events$trigger_reset_game()
     } else {
+      is_game_in_progress(TRUE)
       game_events$trigger_next_level()
     }
   })
@@ -192,9 +189,12 @@ server <- function(input, output, session) {
     current_wonder(game_manager$wonder_id)
     current_wonder_image(game_manager$picture)
     map$start_level()
-    game_in_progress(TRUE)
+    is_level_in_progress(TRUE)
     start_button_text("Reset")
     start_button_icon("PlaybackRate1x")
+    if(isolate(help()) > 0) {
+      is_help_button_disabled(FALSE)
+    }
   })
 
   # TRIGGER RESET GAME
@@ -207,24 +207,26 @@ server <- function(input, output, session) {
     help(game_manager$help)
     current_wonder_image(game_manager$picture)
     map$initialise()
-    game_in_progress(FALSE)
+    is_game_in_progress(FALSE)
+    is_level_in_progress(FALSE)
     start_button_text("Start")
     start_button_icon("Play")
   })
   
   # GAMEPLAY LOGIC
   observeEvent(map$click(), {
-    if (game_in_progress()) {
+    if (is_level_in_progress()) {
       # update game session variables
       game_manager$update_state(map$click()$lng, map$click()$lat)
       score(game_manager$score)
       wonders(game_manager$wonders)
       life(game_manager$life)
       distance(game_manager$distance)
+      is_level_in_progress(FALSE)
+      is_help_button_disabled(TRUE)
       # show/hide modals
       if(life() == 0 || wonders() == 50) {
         is_game_over_modal_open(TRUE)
-      } else {
       }
     }
   })
