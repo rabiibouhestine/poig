@@ -44,12 +44,26 @@ mapServer <- function(id, data, is_level_in_progress = FALSE, wonder = NULL) {
         leafletProxy("map", session, data) %>%
           clearMarkers() %>%
           clearShapes() %>%
+          clearPopups() %>%
           addMarkers(
             lng = ~longitude,
             lat = ~latitude,
             icon = leaflet::makeIcon(
               iconUrl = ~Picture.link,
-              iconWidth = 50, iconHeight = 50
+              iconWidth = 50, iconHeight = 50,
+              className = "wonder-icon"
+            ),
+            popup = paste0(
+              "<b>Wonder: </b>"
+              , data$Name
+              , "<br>"
+              , "<b>Location: </b>"
+              , data$Location
+              , "<br>"
+              , "<a href='"
+              , data$Wikipedia.link
+              , "' target='_blank'>"
+              , "Click Here to View Wiki</a>"
             )
           ) %>%
           flyToBounds(
@@ -66,6 +80,7 @@ mapServer <- function(id, data, is_level_in_progress = FALSE, wonder = NULL) {
         leafletProxy("map", session) %>%
           clearMarkers() %>%
           clearShapes() %>%
+          clearPopups() %>%
           flyToBounds(
             lng1 = 55.9933127,
             lat1 = -19.6848415,
@@ -101,7 +116,37 @@ mapServer <- function(id, data, is_level_in_progress = FALSE, wonder = NULL) {
               icon =  leaflet::makeIcon(
                 iconUrl = ~Picture.link,
                 iconWidth = 50, iconHeight = 50
+              ),
+              popup = paste0(
+                "<b>Wonder: </b>"
+                , wonder_data$Name
+                , "<br>"
+                , "<b>Location: </b>"
+                , wonder_data$Location
+                , "<br>"
+                , "<a href='"
+                , wonder_data$Wikipedia.link
+                , "' target='_blank'>"
+                , "Click Here to View Wiki</a>"
               )
+            ) %>%
+            addPopups(
+              data = wonder_data,
+              lng = ~longitude,
+              lat = ~latitude,
+              popup = paste0(
+                "<b>Wonder: </b>"
+                , wonder_data$Name
+                , "<br>"
+                , "<b>Location: </b>"
+                , wonder_data$Location
+                , "<br>"
+                , "<a href='"
+                , wonder_data$Wikipedia.link
+                , "' target='_blank'>"
+                , "Click Here to View Wiki</a>"
+              ),
+              options = popupOptions(closeButton = FALSE)
             ) %>%
             addMarkers(
               lng = input$map_click$lng,
@@ -117,7 +162,7 @@ mapServer <- function(id, data, is_level_in_progress = FALSE, wonder = NULL) {
               lat1 = input$map_click$lat,
               lng2 = wonder_data$longitude,
               lat2 = wonder_data$latitude,
-              options = list(duration = 0.8)
+              options = list(duration = 0.8, padding = c(100, 100))
             )
         }
       })

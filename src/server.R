@@ -17,10 +17,10 @@ server <- function(input, output, session) {
   current_wonder <- reactiveVal(game_manager$wonder_id)
 
   is_game_in_progress <- reactiveVal(FALSE)
+  is_level_in_progress <- reactiveVal(FALSE)
   is_rules_modal_open <- reactiveVal(TRUE)
   is_game_over_modal_open <- reactiveVal(FALSE)
   is_help_button_disabled <- reactiveVal(FALSE)
-  is_level_in_progress <- reactiveVal(FALSE)
 
   start_button_text <- reactiveVal("Start")
   start_button_icon <- reactiveVal("play")
@@ -102,16 +102,16 @@ server <- function(input, output, session) {
 
   # RENDER GAME OVER MODAL
   output$game_over_modal <- renderReact({
-    dialogContentProps <- list(
-      type=0,
-      title='GAME OVER',
-      closeButtonAriaLabel='Close',
-      subText='Do you want to send this message without a subject?'
-    )
     Dialog(
       hidden = !is_game_over_modal_open(),
-      dialogContentProps = dialogContentProps,
-      modalProps = list(),
+      type = 0,
+      title = 'GAME OVER',
+      closeButtonAriaLabel = 'Close',
+      div(
+        paste0("Wonders played: ", wonders(), "/50"),
+        br(),
+        paste0("Score: ", score())
+      ),
       DialogFooter(
         PrimaryButton.shinyInput("reset_game", text = "Restart")
       )
@@ -123,16 +123,14 @@ server <- function(input, output, session) {
 
   # RENDER RULES MODAL
   output$rules_modal <- renderReact({
-    dialogContentProps <- list(
-      type=0,
-      title='Missing Subject',
-      closeButtonAriaLabel='Close',
-      subText='Do you want to send this message without a subject?'
-    )
     Dialog(
+      type = 0,
+      title = 'WondeR GuesseR Rules',
+      closeButtonAriaLabel = 'Close',
+      div(
+        "Locate the wonder in the top right image is on the map"
+      ),
       hidden = !is_rules_modal_open(),
-      dialogContentProps = dialogContentProps,
-      modalProps = list(),
       DialogFooter(
         PrimaryButton.shinyInput("rules_ok", text = "Got it!")
       )

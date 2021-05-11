@@ -19,7 +19,7 @@ ui <- fluidPage(
     column(3,
            fluidRow(
              column(12,
-                    wellPanel(
+                    div(class = "well",
                       uiOutput("wonder_image")
                     )
              )
