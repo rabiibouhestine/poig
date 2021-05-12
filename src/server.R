@@ -11,6 +11,7 @@ server <- function(input, output, session) {
   wonders <- reactiveVal(game_manager$wonders)
   life <- reactiveVal(game_manager$life)
   score <- reactiveVal(game_manager$score)
+  level_score <- reactiveVal(game_manager$level_score)
   help <- reactiveVal(game_manager$help)
   distance <- reactiveVal(game_manager$distance)
   current_wonder_image <- reactiveVal(game_manager$picture)
@@ -31,29 +32,35 @@ server <- function(input, output, session) {
   # WONDER IMAGE
   output$wonder_image <- renderUI({
     if(is_game_in_progress()){
-      Stack(
-        h6("Locate this wonder on the map"),
-        img(height = 240, width = "100%", src = current_wonder_image()),
-        Stack(
-          PrimaryButton.shinyInput(
-            "help.btn",
-            text = paste0("Help (", help()," )"),
-            disabled = is_help_button_disabled(),
-            iconProps = list("iconName" = "Nav2DMapView")
+      div(class = "image-panel",
+          div(class = "image-panel-title",
+            "Try to locate the wonder shown in this image on the map"
           ),
-          PrimaryButton.shinyInput(
-            "next_level",
-            text = "Next Wonder >",
-            disabled = is_level_in_progress()
+          div(class = "image-panel-picture",
+            img(height = 240, width = "100%", src = current_wonder_image())
           ),
-          horizontal = TRUE,
-          tokens = list(childrenGap = 20)
-        ),
-        horizontal = FALSE,
-        tokens = list(childrenGap = 20)
+          div(class = "image-panel-buttons",
+            Stack(
+              PrimaryButton.shinyInput(
+                "help.btn",
+                text = paste0("Help (", help()," )"),
+                disabled = is_help_button_disabled(),
+                iconProps = list("iconName" = "Nav2DMapView")
+              ),
+              PrimaryButton.shinyInput(
+                "next_level",
+                text = "Next Wonder >",
+                disabled = is_level_in_progress()
+              ),
+              horizontal = TRUE,
+              tokens = list(childrenGap = 20)
+            )
+          )
       )
     } else {
-      h1("WondeR GuesseR")
+      div(class = "image-panel",
+          img(height = 340, width = "100%", src = "https://static.toiimg.com/photo/62033069.cms")
+      )
     }
   })
 
@@ -128,7 +135,15 @@ server <- function(input, output, session) {
       title = 'WondeR GuesseR Rules',
       closeButtonAriaLabel = 'Close',
       div(
-        "Locate the wonder in the top right image is on the map"
+        h3("How to play:"),
+        tags$ol(
+          tags$li("Click on start button to start the game"),
+          tags$li("Try to locate the wonder in the top right corner image on the map (click on where you think it is)"),
+          tags$li("After clicking, the correct location will show up
+             along with the distance to it from where you clicked and how much your score increased"),
+          tags$li("click on next to move to the next wonder"),
+          tags$li("keep playing untill you either run out of distance or finish locating all 50 wonders")
+        )
       ),
       hidden = !is_rules_modal_open(),
       DialogFooter(
@@ -200,6 +215,7 @@ server <- function(input, output, session) {
     game_events$reset_game() # Triggers this observer
     game_manager$reset()
     score(game_manager$score)
+    level_score(game_manager$level_score)
     wonders(game_manager$wonders)
     life(game_manager$life)
     help(game_manager$help)
@@ -217,9 +233,11 @@ server <- function(input, output, session) {
       # update game session variables
       game_manager$update_state(map$click()$lng, map$click()$lat)
       score(game_manager$score)
+      level_score(game_manager$level_score)
       wonders(game_manager$wonders)
       life(game_manager$life)
       distance(game_manager$distance)
+      map$show_distance(distance(), level_score())
       is_level_in_progress(FALSE)
       is_help_button_disabled(TRUE)
       # show/hide modals

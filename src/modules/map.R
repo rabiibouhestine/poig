@@ -17,10 +17,6 @@ mapServer <- function(id, data, is_level_in_progress = FALSE, wonder = NULL) {
         iconUrl = "http://simpleicon.com/wp-content/uploads/cross.png",
         iconWidth = 50, iconHeight = 50
       )
-      wonderIcon <- leaflet::makeIcon(
-        iconUrl = "https://static.thenounproject.com/png/7224-200.png",
-        iconWidth = 50, iconHeight = 50
-      )
       helpIcon <- leaflet::makeIcon(
         iconUrl = "https://toppng.com/uploads/preview/question-mark-icon-png-1155224288245ptwi4q2v.png",
         iconWidth = 50, iconHeight = 50
@@ -32,10 +28,10 @@ mapServer <- function(id, data, is_level_in_progress = FALSE, wonder = NULL) {
           leaflet() %>%
           addProviderTiles(providers$CartoDB.Positron) %>%
           fitBounds(
-            lng1 = 55.9933127,
-            lat1 = -19.6848415,
-            lng2 = 2.3194052,
-            lat2 = 104.416721
+            lng1 = -178.9398,
+            lat1 = 80.2385,
+            lng2 = 201.0992,
+            lat2 = -53.33087
           )
       })
 
@@ -43,8 +39,8 @@ mapServer <- function(id, data, is_level_in_progress = FALSE, wonder = NULL) {
       initialise <- function() {
         leafletProxy("map", session, data) %>%
           clearMarkers() %>%
-          clearShapes() %>%
           clearPopups() %>%
+          clearControls() %>%
           addMarkers(
             lng = ~longitude,
             lat = ~latitude,
@@ -67,10 +63,10 @@ mapServer <- function(id, data, is_level_in_progress = FALSE, wonder = NULL) {
             )
           ) %>%
           flyToBounds(
-            lng1 = 55.9933127,
-            lat1 = -19.6848415,
-            lng2 = 2.3194052,
-            lat2 = 104.416721,
+            lng1 = -178.9398,
+            lat1 = 80.2385,
+            lng2 = 201.0992,
+            lat2 = -53.33087,
             options = list(duration = 0.5)
           )
       }
@@ -79,8 +75,8 @@ mapServer <- function(id, data, is_level_in_progress = FALSE, wonder = NULL) {
       start_level <- function() {
         leafletProxy("map", session) %>%
           clearMarkers() %>%
-          clearShapes() %>%
           clearPopups() %>%
+          clearControls() %>%
           flyToBounds(
             lng1 = 55.9933127,
             lat1 = -19.6848415,
@@ -102,6 +98,18 @@ mapServer <- function(id, data, is_level_in_progress = FALSE, wonder = NULL) {
             lat = ~latitude,
             icon = helpIcon
           )
+      }
+
+      # SHOW DISTANCE
+      show_distance <- function(distance, level_score) {
+        leafletProxy("map", session) %>%
+          addControl(
+            html = tags$div(
+              HTML(
+                paste0("Distance: ", distance, "<br> Score: + ", level_score)
+                )
+            ),
+            position = "bottomleft")
       }
 
       # MAP CLICK EVENT
@@ -153,10 +161,6 @@ mapServer <- function(id, data, is_level_in_progress = FALSE, wonder = NULL) {
               lat = input$map_click$lat,
               icon = crossIcon
             ) %>%
-            addPolylines(
-              lng = c(input$map_click$lng, wonder_data$longitude),
-              lat = c(input$map_click$lat, wonder_data$latitude)
-            ) %>%
             flyToBounds(
               lng1 = input$map_click$lng,
               lat1 = input$map_click$lat,
@@ -172,6 +176,7 @@ mapServer <- function(id, data, is_level_in_progress = FALSE, wonder = NULL) {
           initialise = initialise,
           start_level = start_level,
           show_help = show_help,
+          show_distance = show_distance,
           click = reactive(input$map_click)
         )
       )

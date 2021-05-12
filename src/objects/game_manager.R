@@ -14,6 +14,7 @@ gameManager <- R6Class("gameManager",
                           wonder_ids = NULL,
                           wonder_id = NULL,
                           score = 0,
+                          level_score = 0,
                           wonders = 0,
                           life = 100000,
                           help = 3,
@@ -25,6 +26,7 @@ gameManager <- R6Class("gameManager",
                           #' Resets fields.
                           reset = function() {
                             self$score <- 0
+                            self$level_score <- 0
                             self$wonders <- 0
                             self$life <- 100000
                             self$help <- 3
@@ -50,18 +52,19 @@ gameManager <- R6Class("gameManager",
                               p1 = c(click_longitude, click_latitude),
                               p2 = c(self$data[self$wonder_id,]$longitude, self$data[self$wonder_id,]$latitude),
                               lonlat = TRUE
-                            ) / 1000
+                            )
 
                             self$wonders <- self$wonders + 1
-                            self$life <- max(0, self$life - raw_distance_km)
+                            self$life <- max(0, self$life - (raw_distance_km/1000))
 
-                            if(raw_distance_km < 1) {
-                              self$distance <- "< 1 km"
-                              self$score <- self$score + 2000
+                            if(raw_distance_km < 1000) {
+                              self$distance <- paste0(round(raw_distance_km, 0), " m")
                             } else {
-                              self$distance <- paste0(round(raw_distance_km, 0), " km")
-                              self$score <- self$score + (2000/raw_distance_km)
+                              self$distance <- paste0(round(raw_distance_km/1000, 0), " km")
                             }
+
+                            self$level_score <- round(max(0, (5000 - (raw_distance_km %/% 1000))/100), 0)
+                            self$score <- self$score + self$level_score
                           },
 
                           #' @description

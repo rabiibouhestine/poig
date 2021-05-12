@@ -1,35 +1,28 @@
 # Define UI for app that draws a histogram ----
 ui <- fluidPage(
-  tags$head(
-    tags$style(HTML("
-      .container-fluid {
-        padding-top: 50px !important;
-      }"))
-  ),
+  tags$link(href = "style.css", rel = "stylesheet", type = "text/css"),
 
   reactOutput("rules_modal"),
   reactOutput("game_over_modal"),
 
   fluidRow(
     column(7, offset = 1,
-           wellPanel(
+           div(class = "map-panel",
              mapUI("map")
            )
     ),
     column(3,
            fluidRow(
              column(12,
-                    div(class = "well",
-                      uiOutput("wonder_image")
-                    )
+                    uiOutput("wonder_image")
              )
            ),
            fluidRow(
              column(12,
-                    wellPanel(
+                    div(class = "progress-bar-panel",
                       progressBar(
                         id = "wonders",
-                        title = "wonders played",
+                        title = "Wonders played",
                         value = 0,
                         total = 50,
                         status = "primary",
@@ -40,10 +33,10 @@ ui <- fluidPage(
            ),
            fluidRow(
              column(12,
-                    wellPanel(
+                    div(class = "progress-bar-panel",
                       progressBar(
                         id = "life",
-                        title = "distance used (km)",
+                        title = "Remaining distance (km)",
                         value = 0,
                         total = 100000,
                         status = "sucess",
@@ -55,20 +48,21 @@ ui <- fluidPage(
            ),
            fluidRow(
              column(12,
-                    wellPanel(
+                    div(class = "score-panel",
                       textOutput("score")
                     )
              )
            ),
            fluidRow(
              column(12,
-                    Stack(
-                      reactOutput("rules_btn"),
-                      reactOutput("start_btn"),
-                      horizontal = TRUE,
-                      tokens = list(childrenGap = 20)
+                    div(class = "main-buttons",
+                      Stack(
+                        reactOutput("rules_btn"),
+                        reactOutput("start_btn"),
+                        horizontal = TRUE,
+                        tokens = list(childrenGap = 20)
+                      )
                     )
-                    
              )
            )
     )

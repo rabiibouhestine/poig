@@ -1,49 +1,93 @@
-.main-page {
-  background: grey;
-  height: 100vh;
-  width: 100vw;
-  padding: 20px;
-  
-  display: grid;
-  gap: 20px;
-  
-  grid-template-areas:
-  "wonder_card wonders life score"
-  "wonder_card map map map"
-  "wonder_card rules help start";
-  
-  grid-template-rows: 1fr 3fr;
-  grid-template-columns: 200px 1fr 200px;
+body {
+  background-color: #fff;
+  min-height: 611px;
+  margin: 0;
 }
 
-.main-page .wonder-card {
-  grid-area: wonder_card;
+.container-fluid {
+  padding-top: 50px !important;
 }
 
-.main-page .wonders {
-  grid-area: wonders;
+.map-panel {
+  border: 1px solid #d4dadc;
+  border-radius: 2px;
+  box-shadow: 0 3.2px 7.2px 0 rgba(0,0,0,.132), 0 0.6px 1.8px 0 rgba(0,0,0,.108);
 }
 
-.main-page .life {
-  grid-area: life;
+.image-panel {
+    min-height: 340px;
+    padding: 0px;
+    margin-bottom: 20px;
+    background-color: #d4dadc;
+    border: 1px solid #d4dadc;
+    border-radius: 2px;
+    box-shadow: 0 3.2px 7.2px 0 rgba(0,0,0,.132), 0 0.6px 1.8px 0 rgba(0,0,0,.108);
 }
 
-.main-page .score {
-  grid-area: score;
+.image-panel-title {
+  padding: 10px 19px 10px 19px;
+  font-size: medium;
 }
 
-.main-page .map {
-  grid-area: map;
+.image-panel-picture {
+  padding: 0px;
 }
 
-.main-page .rules {
-  grid-area: rules;
+.image-panel-buttons {
+  padding: 12px 19px 12px 19px;
 }
 
-.main-page .help {
-  grid-area: help;
+.image-panel-buttons button {
+  width: 100%;
 }
 
-.main-page .start {
-  grid-area: start;
+.progress-bar-panel {
+  min-height: 20px;
+  padding: 10px 19px 0px 19px;
+  margin-bottom: 20px;
+  background-color: #d4dadc;
+  border: 1px solid #d4dadc;
+  border-radius: 2px;
+  box-shadow: 0 3.2px 7.2px 0 rgba(0,0,0,.132), 0 0.6px 1.8px 0 rgba(0,0,0,.108);
 }
+
+.progress-text {
+  font-weight: bold;
+}
+
+.progress-number {
+    position: absolute;
+    right: 40px !important;
+}
+
+.score-panel {
+    font-size: x-large;
+    font-weight: bold;
+    min-height: 20px;
+    padding: 12px 19px 11px 19px;
+    margin-bottom: 20px;
+    background-color: #d4dadc;
+    border: 1px solid #d4dadc;
+    border-radius: 2px;
+    box-shadow: 0 3.2px 7.2px 0 rgba(0,0,0,.132), 0 0.6px 1.8px 0 rgba(0,0,0,.108);
+}
+
+.main-buttons #rules_btn {
+  width: 100%;
+}
+.main-buttons #start_btn {
+  width: 100%;
+}
+.main-buttons button {
+  width: 100%;
+  box-shadow: 0 3.2px 7.2px 0 rgba(0,0,0,.132), 0 0.6px 1.8px 0 rgba(0,0,0,.108);
+}
+
+
+
+.main-57 {
+    width: auto;
+    max-width: 800px !important;
+    min-width: 288px;
+}
+
