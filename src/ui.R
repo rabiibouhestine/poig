@@ -1,4 +1,4 @@
-# Define UI for app that draws a histogram ----
+# Define UI for WondeR GuesseR
 ui <- fluidPage(
   tags$link(href = "style.css", rel = "stylesheet", type = "text/css"),
 

@@ -2,10 +2,10 @@
 server <- function(input, output, session) {
 
   # INITIALISE GAME MANAGER
-  game_manager <- gameManager$new(wow, default_image)
+  game_manager <- gameManager$new(data = wow)
 
   # INITIALISE GAME LOGIC TRIGGERS
-  game_events <- GameEventReactiveTrigger()
+  game_events <- utils$GameEventReactiveTrigger()
 
   # INITIALISE GAME STATE VARIABLES
   wonders <- reactiveVal(game_manager$wonders)
@@ -69,7 +69,7 @@ server <- function(input, output, session) {
     paste0("Score: ", score())
   })
 
-  # LIFE INDICATOR
+  # UPDATE WONDERS PLAYED PROGRESS BAR
   observeEvent(wonders(), {
     updateProgressBar(
       session = session,
@@ -79,7 +79,7 @@ server <- function(input, output, session) {
       )
   })
 
-  # LIFE INDICATOR
+  # UPDATE REMAINING DISTANCE PROGRESS BAR
   observeEvent(life(), {
     if (life() < 5000) {
       status <- "danger"
@@ -99,73 +99,13 @@ server <- function(input, output, session) {
     )
   })
 
-  # HELP BUTTON LOGIC
+  # TIPS BUTTON LOGIC
   observeEvent(input$help.btn, {
     is_help_button_disabled(TRUE)
     game_manager$use_help()
     help(game_manager$help)
     map$show_help()
   })
-
-  # RENDER GAME OVER MODAL
-  output$game_over_modal <- renderReact({
-    Dialog(
-      hidden = !is_game_over_modal_open(),
-      type = 0,
-      title = 'GAME OVER',
-      closeButtonAriaLabel = 'Close',
-      div(
-        paste0("Wonders played: ", wonders(), "/38"),
-        br(),
-        paste0("Score: ", score())
-      ),
-      DialogFooter(
-        PrimaryButton.shinyInput("reset_game", text = "Restart")
-      )
-    )
-  })
-
-  # SHOW/HIDE GAME OVER MODAL
-  observeEvent(input$reset_game, is_game_over_modal_open(FALSE))
-
-  # RENDER RULES MODAL
-  output$rules_modal <- renderReact({
-    Dialog(
-      type = 0,
-      title = 'WondeR GuesseR',
-      closeButtonAriaLabel = 'Close',
-      div(
-        h4("Wonder Guesser is a game that tests your knowledge of 37 curated wonders of the world."),
-        h4("These range from natural wonders to industrial achievements. Try to locate each wonder on the map."),
-        h3("How to play:"),
-        tags$ol(
-          tags$li("Click on the start button to start the game."),
-          tags$li("A wonder image will be displayed in the top right corner."),
-          tags$li("Try to locate the wonder on the map (click on where you think it is)."),
-          tags$li("After clicking, the correct location will be displayed."),
-          tags$li("Your score will increase dependeing on the distance of your click from the correct location."),
-          tags$li("The distance of your click from the correct location will be substracted from 'Remaining distance'."),
-          tags$li("click on the Next button to move to the next wonder"),
-          tags$li("keep playing untill you either run out of 'Remaining distance' or finish playing all 38 wonders")
-        ),
-        h3("Rules:"),
-        tags$ul(
-          tags$li("'Remaining distance' starts at 20000 km."),
-          tags$li("You can use tips up to 3 times"),
-          tags$li("Tips will highlight possible areas where the wonder might be located")
-        ),
-        p(strong("Note: "), "Clicking on a wonder icon on the map will display information (name, location and a wikipedia link).")
-      ),
-      hidden = !is_rules_modal_open(),
-      DialogFooter(
-        PrimaryButton.shinyInput("rules_ok", text = "Got it!")
-      )
-    )
-  })
-
-  # SHOW/HIDE RULES MODAL
-  observeEvent(input$rules.btn, is_rules_modal_open(TRUE))
-  observeEvent(input$rules_ok, is_rules_modal_open(FALSE))
 
   # RENDER RULES BUTTON
   output$rules_btn <- renderReact({
@@ -196,7 +136,7 @@ server <- function(input, output, session) {
     }
   })
 
-  # NEXT LEVEL BUTTON LOGIC (IN POST CLICK MODAL)
+  # NEXT LEVEL BUTTON LOGIC
   observeEvent(input$next_level,{
     game_events$trigger_next_level()
   })
@@ -238,7 +178,7 @@ server <- function(input, output, session) {
     start_button_icon("Play")
   })
   
-  # GAMEPLAY LOGIC
+  # MAP CLICK EVENT
   observeEvent(map$click(), {
     if (is_level_in_progress()) {
       # update game session variables
@@ -251,13 +191,72 @@ server <- function(input, output, session) {
       map$show_distance(distance(), level_score())
       is_level_in_progress(FALSE)
       is_help_button_disabled(TRUE)
-      # show/hide modals
+      # TRIGGER GAME OVER MODAL
       if(life() == 0 || wonders() == 38) {
         is_game_over_modal_open(TRUE)
       }
     }
   })
+
+  # RENDER GAME OVER MODAL
+  output$game_over_modal <- renderReact({
+    Dialog(
+      hidden = !is_game_over_modal_open(),
+      type = 0,
+      title = 'GAME OVER',
+      closeButtonAriaLabel = 'Close',
+      div(
+        paste0("Wonders played: ", wonders(), "/38"),
+        br(),
+        paste0("Score: ", score())
+      ),
+      DialogFooter(
+        PrimaryButton.shinyInput("reset_game", text = "Restart")
+      )
+    )
+  })
   
+  # SHOW/HIDE GAME OVER MODAL
+  observeEvent(input$reset_game, is_game_over_modal_open(FALSE))
+  
+  # RENDER RULES MODAL
+  output$rules_modal <- renderReact({
+    Dialog(
+      type = 0,
+      title = 'WondeR GuesseR',
+      closeButtonAriaLabel = 'Close',
+      div(
+        h4("Wonder Guesser is a game that tests your knowledge of 37 curated wonders of the world."),
+        h4("These range from natural wonders to industrial achievements. Try to locate each wonder on the map."),
+        h3("How to play:"),
+        tags$ol(
+          tags$li("Click on the start button to start the game."),
+          tags$li("A wonder image will be displayed in the top right corner."),
+          tags$li("Try to locate the wonder on the map (click on where you think it is)."),
+          tags$li("After clicking, the correct location will be displayed."),
+          tags$li("Your score will increase dependeing on the distance of your click from the correct location."),
+          tags$li("The distance of your click from the correct location will be substracted from 'Remaining distance'."),
+          tags$li("click on the Next button to move to the next wonder"),
+          tags$li("keep playing untill you either run out of 'Remaining distance' or finish playing all 38 wonders")
+        ),
+        h3("Rules:"),
+        tags$ul(
+          tags$li("'Remaining distance' starts at 20000 km."),
+          tags$li("You can use tips up to 3 times"),
+          tags$li("Tips will highlight possible areas where the wonder might be located")
+        ),
+        p(strong("Note: "), "Clicking on a wonder icon on the map will display information (name, location and a wikipedia link).")
+      ),
+      hidden = !is_rules_modal_open(),
+      DialogFooter(
+        PrimaryButton.shinyInput("rules_ok", text = "Got it!")
+      )
+    )
+  })
+  
+  # SHOW/HIDE RULES MODAL
+  observeEvent(input$rules.btn, is_rules_modal_open(TRUE))
+  observeEvent(input$rules_ok, is_rules_modal_open(FALSE))
   
 
 }

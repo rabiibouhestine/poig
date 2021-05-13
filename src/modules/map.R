@@ -1,27 +1,17 @@
 
 
-# Define the UI for a module
+# Define the UI for the map module
 mapUI <- function(id) {
   ns <- NS(id)
   leafletOutput(ns("map"), height = 600)
 }
 
-# Define the server logic for a module
+# Define the server logic for the map module
 mapServer <- function(id, data, is_level_in_progress = FALSE, wonder = NULL) {
   moduleServer(
     id,
     function(input, output, session) {
 
-      # ICONS
-      crossIcon <- leaflet::makeIcon(
-        iconUrl = "http://simpleicon.com/wp-content/uploads/cross.png",
-        iconWidth = 50, iconHeight = 50
-      )
-      helpIcon <- leaflet::makeIcon(
-        iconUrl = "https://toppng.com/uploads/preview/question-mark-icon-png-1155224288245ptwi4q2v.png",
-        iconWidth = 50, iconHeight = 50
-      )
-      
       # RENDER MAP
       output$map <- renderLeaflet({
         data %>%
@@ -170,7 +160,10 @@ mapServer <- function(id, data, is_level_in_progress = FALSE, wonder = NULL) {
             addMarkers(
               lng = input$map_click$lng,
               lat = input$map_click$lat,
-              icon = crossIcon
+              icon = leaflet::makeIcon(
+                iconUrl = "http://simpleicon.com/wp-content/uploads/cross.png",
+                iconWidth = 50, iconHeight = 50
+              )
             ) %>%
             flyToBounds(
               lng1 = input$map_click$lng,

@@ -6,9 +6,6 @@ export("gameManager")
 #'
 #' the game manager controls the state of the game
 gameManager <- R6Class("gameManager",
-                        private = list(
-                          state = NULL
-                        ),
                         public = list(
                           data = NULL,
                           wonder_ids = NULL,
@@ -20,7 +17,6 @@ gameManager <- R6Class("gameManager",
                           help = 3,
                           distance = NULL,
                           picture = NULL,
-                          default_picture = NULL,
 
                           #' @description
                           #' Resets fields.
@@ -31,14 +27,11 @@ gameManager <- R6Class("gameManager",
                             self$life <- 20000
                             self$help <- 3
                             self$distance <- NULL
-                            self$picture <- self$default_picture
                             self$wonder_ids <- seq(1:nrow(self$data))
                           },
 
                           #' @description
-                          #' Creates a new data provider object.
-                          #' @param config app.yml config file.
-                          #' @return A new `stateManager` object.
+                          #' Updates tips
                           use_help = function() {
                             if(self$help > 0) {
                               self$help <- self$help - 1
@@ -68,9 +61,7 @@ gameManager <- R6Class("gameManager",
                           },
 
                           #' @description
-                          #' Creates a new data provider object.
-                          #' @param config app.yml config file.
-                          #' @return A new `stateManager` object.
+                          #' Generates a new wonder to locate
                           make_level = function() {
                             self$wonder_id <- sample(self$wonder_ids, 1)
                             self$wonder_ids <- setdiff(self$wonder_ids, self$wonder_id)
@@ -78,14 +69,11 @@ gameManager <- R6Class("gameManager",
                           },
 
                           #' @description
-                          #' Creates a new data provider object.
-                          #' @param config app.yml config file.
-                          #' @return A new `stateManager` object.
-                          initialize = function(data, default_picture) {
+                          #' Creates a new game manager object.
+                          #' @param data data.frame of the wonders.
+                          initialize = function(data) {
                             self$data <- data
                             self$wonder_ids <- seq(1:nrow(data))
-                            self$picture <- default_picture
-                            self$default_picture <- default_picture
                           }
                         )
 )
