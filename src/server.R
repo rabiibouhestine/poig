@@ -135,25 +135,26 @@ server <- function(input, output, session) {
       title = 'WondeR GuesseR',
       closeButtonAriaLabel = 'Close',
       div(
-        h3("About:"),
-        p("Wonder Guesser is a game that tests your knowledge of the wonders of the world, be it industrial or natural.
-          Try to locate each wonder from a curated list of 37 amazing wonders."),
+        h4("Wonder Guesser is a game that tests your knowledge of 37 curated wonders of the world."),
+        h4("These range from natural wonders to industrial achievements. Try to locate each wonder on the map."),
         h3("How to play:"),
         tags$ol(
-          tags$li("Click on start button to start the game"),
-          tags$li("Try to locate the wonder in the top right corner image on the map (click on where you think it is)"),
-          tags$li("After clicking, the correct location will show up
-             along with the distance to it from where you clicked and how much your score increased"),
-          tags$li("click on next to move to the next wonder"),
-          tags$li("keep playing untill you either run out of distance or finish locating all 50 wonders")
+          tags$li("Click on the start button to start the game."),
+          tags$li("A wonder image will be displayed in the top right corner."),
+          tags$li("Try to locate the wonder on the map (click on where you think it is)."),
+          tags$li("After clicking, the correct location will be displayed."),
+          tags$li("Your score will increase dependeing on the distance of your click from the correct location."),
+          tags$li("The distance of your click from the correct location will be substracted from 'Remaining distance'."),
+          tags$li("click on the Next button to move to the next wonder"),
+          tags$li("keep playing untill you either run out of 'Remaining distance' or finish playing all 38 wonders")
         ),
         h3("Rules:"),
         tags$ul(
-          tags$li("You are allowed to use 20000 km in your guesses"),
-          tags$li("Each time you make a guess, the distance from the correct location will be substracted from your allowed total distance to use"),
+          tags$li("'Remaining distance' starts at 20000 km."),
           tags$li("You can use tips up to 3 times"),
           tags$li("Tips will highlight possible areas where the wonder might be located")
-        )
+        ),
+        p(strong("Note: "), "Clicking on a wonder icon on the map will display information (name, location and a wikipedia link).")
       ),
       hidden = !is_rules_modal_open(),
       DialogFooter(
