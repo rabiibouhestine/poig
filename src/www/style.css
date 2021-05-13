@@ -14,8 +14,22 @@ body {
   box-shadow: 0 3.2px 7.2px 0 rgba(0,0,0,.132), 0 0.6px 1.8px 0 rgba(0,0,0,.108);
 }
 
+.wonder-icon {
+  border-radius: 50px;
+  border: 1px solid grey;
+}
+
+.wonder-icon:hover {
+  border: 1px solid #0078A8;
+}
+
+.leaflet-popup {
+  bottom: 12px !important;
+}
+
+
 .image-panel {
-    min-height: 340px;
+    min-height: 347px;
     padding: 0px;
     margin-bottom: 20px;
     background-color: #d4dadc;
@@ -27,6 +41,7 @@ body {
 .image-panel-title {
   padding: 10px 19px 10px 19px;
   font-size: medium;
+  font-weight: bold;
 }
 
 .image-panel-picture {
@@ -61,7 +76,9 @@ body {
 }
 
 .score-panel {
-    font-size: x-large;
+    width: 100%;
+    height: 50px;
+    font-size: large;
     font-weight: bold;
     min-height: 20px;
     padding: 12px 19px 11px 19px;
@@ -79,6 +96,8 @@ body {
   width: 100%;
 }
 .main-buttons button {
+  height: 50px;
+  font-size: large;
   width: 100%;
   box-shadow: 0 3.2px 7.2px 0 rgba(0,0,0,.132), 0 0.6px 1.8px 0 rgba(0,0,0,.108);
 }

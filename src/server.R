@@ -34,16 +34,16 @@ server <- function(input, output, session) {
     if(is_game_in_progress()){
       div(class = "image-panel",
           div(class = "image-panel-title",
-            "Try to locate the wonder shown in this image on the map"
+            "Locate the wonder shown in this image on the map"
           ),
           div(class = "image-panel-picture",
-            img(height = 240, width = "100%", src = current_wonder_image())
+            img(height = 247, width = "100%", src = current_wonder_image())
           ),
           div(class = "image-panel-buttons",
             Stack(
               PrimaryButton.shinyInput(
                 "help.btn",
-                text = paste0("Help (", help()," )"),
+                text = paste0("Tips (", help()," )"),
                 disabled = is_help_button_disabled(),
                 iconProps = list("iconName" = "Nav2DMapView")
               ),
@@ -75,17 +75,17 @@ server <- function(input, output, session) {
       session = session,
       id = "wonders",
       value = wonders(),
-      total = 50
+      total = 38
       )
   })
 
   # LIFE INDICATOR
   observeEvent(life(), {
-    if (life() < 25000) {
+    if (life() < 5000) {
       status <- "danger"
-    } else if (life() >= 25000 & life() < 50000) {
+    } else if (life() >= 5000 & life() < 10000) {
       status <- "warning"
-    } else if (life() >= 50000 & life() < 75000) {
+    } else if (life() >= 10000 & life() < 15000) {
       status <- "info"
     } else {
       status <- "success"
@@ -94,7 +94,7 @@ server <- function(input, output, session) {
       session = session,
       id = "life",
       value = life(),
-      total = 100000,
+      total = 20000,
       status = status
     )
   })
@@ -115,7 +115,7 @@ server <- function(input, output, session) {
       title = 'GAME OVER',
       closeButtonAriaLabel = 'Close',
       div(
-        paste0("Wonders played: ", wonders(), "/50"),
+        paste0("Wonders played: ", wonders(), "/38"),
         br(),
         paste0("Score: ", score())
       ),
@@ -143,6 +143,13 @@ server <- function(input, output, session) {
              along with the distance to it from where you clicked and how much your score increased"),
           tags$li("click on next to move to the next wonder"),
           tags$li("keep playing untill you either run out of distance or finish locating all 50 wonders")
+        ),
+        h3("Rules:"),
+        tags$ul(
+          tags$li("You are allowed to use 20000 km in your guesses"),
+          tags$li("Each time you make a guess, the distance from the correct location will be substracted from your allowed total distance to use"),
+          tags$li("You can use tips up to 3 times"),
+          tags$li("Tips will highlight possible areas where the wonder might be located")
         )
       ),
       hidden = !is_rules_modal_open(),
@@ -241,7 +248,7 @@ server <- function(input, output, session) {
       is_level_in_progress(FALSE)
       is_help_button_disabled(TRUE)
       # show/hide modals
-      if(life() == 0 || wonders() == 50) {
+      if(life() == 0 || wonders() == 38) {
         is_game_over_modal_open(TRUE)
       }
     }

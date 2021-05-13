@@ -16,7 +16,7 @@ gameManager <- R6Class("gameManager",
                           score = 0,
                           level_score = 0,
                           wonders = 0,
-                          life = 100000,
+                          life = 20000,
                           help = 3,
                           distance = NULL,
                           picture = NULL,
@@ -28,7 +28,7 @@ gameManager <- R6Class("gameManager",
                             self$score <- 0
                             self$level_score <- 0
                             self$wonders <- 0
-                            self$life <- 100000
+                            self$life <- 20000
                             self$help <- 3
                             self$distance <- NULL
                             self$picture <- self$default_picture
@@ -63,7 +63,7 @@ gameManager <- R6Class("gameManager",
                               self$distance <- paste0(round(raw_distance_km/1000, 0), " km")
                             }
 
-                            self$level_score <- round(max(0, (5000 - (raw_distance_km %/% 1000))/100), 0)
+                            self$level_score <- round(exp(max(0, (5000 - (raw_distance_km %/% 1000))/1000)), 0)
                             self$score <- self$score + self$level_score
                           },
 

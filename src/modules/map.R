@@ -25,7 +25,7 @@ mapServer <- function(id, data, is_level_in_progress = FALSE, wonder = NULL) {
       # RENDER MAP
       output$map <- renderLeaflet({
         data %>%
-          leaflet() %>%
+          leaflet(options = leafletOptions(minZoom = 2, maxZoom = 10)) %>%
           addProviderTiles(providers$CartoDB.Positron) %>%
           fitBounds(
             lng1 = -178.9398,
@@ -41,6 +41,7 @@ mapServer <- function(id, data, is_level_in_progress = FALSE, wonder = NULL) {
           clearMarkers() %>%
           clearPopups() %>%
           clearControls() %>%
+          clearShapes() %>%
           addMarkers(
             lng = ~longitude,
             lat = ~latitude,
@@ -77,6 +78,7 @@ mapServer <- function(id, data, is_level_in_progress = FALSE, wonder = NULL) {
           clearMarkers() %>%
           clearPopups() %>%
           clearControls() %>%
+          clearShapes() %>%
           flyToBounds(
             lng1 = 55.9933127,
             lat1 = -19.6848415,
@@ -93,10 +95,17 @@ mapServer <- function(id, data, is_level_in_progress = FALSE, wonder = NULL) {
         help_wonders <- c(wonder(), sample(wrong_wonders, 5))
         help_data <- data[help_wonders,]
         leafletProxy("map", session, help_data) %>%
-          addMarkers(
+          addCircles(
             lng = ~longitude,
             lat = ~latitude,
-            icon = helpIcon
+            radius = 1000000,
+            options = pathOptions(interactive = FALSE),
+            color = "#0078d4",
+            weight = 0,
+            opacity = 0.4,
+            fill = TRUE,
+            fillColor = "#0078d4",
+            fillOpacity = 0.4
           )
       }
 
@@ -117,13 +126,15 @@ mapServer <- function(id, data, is_level_in_progress = FALSE, wonder = NULL) {
         if(isTRUE(is_level_in_progress())){
           wonder_data <- data[wonder(),]
           leafletProxy("map", session) %>%
+            clearShapes() %>%
             addMarkers(
               data = wonder_data,
               lng = ~longitude,
               lat = ~latitude,
               icon =  leaflet::makeIcon(
                 iconUrl = ~Picture.link,
-                iconWidth = 50, iconHeight = 50
+                iconWidth = 50, iconHeight = 50,
+                className = "wonder-icon"
               ),
               popup = paste0(
                 "<b>Wonder: </b>"

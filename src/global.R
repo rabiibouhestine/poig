@@ -8,7 +8,7 @@ library(shiny.fluent)
 
 source("modules/map.R")
 
-wow <- read.csv("data/wonders_of_world.csv")
+wow <- read.csv("data/wonders.csv")
 
 
 gameManager <- use("objects/game_manager.R")$gameManager

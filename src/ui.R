@@ -38,7 +38,7 @@ ui <- fluidPage(
                         id = "life",
                         title = "Remaining distance (km)",
                         value = 0,
-                        total = 100000,
+                        total = 20000,
                         status = "sucess",
                         display_pct = TRUE,
                         striped = TRUE
@@ -48,15 +48,11 @@ ui <- fluidPage(
            ),
            fluidRow(
              column(12,
-                    div(class = "score-panel",
-                      textOutput("score")
-                    )
-             )
-           ),
-           fluidRow(
-             column(12,
                     div(class = "main-buttons",
                       Stack(
+                        div(class = "score-panel",
+                            textOutput("score")
+                        ),
                         reactOutput("rules_btn"),
                         reactOutput("start_btn"),
                         horizontal = TRUE,
