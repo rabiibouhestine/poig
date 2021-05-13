@@ -59,7 +59,7 @@ server <- function(input, output, session) {
       )
     } else {
       div(class = "image-panel",
-          img(height = 340, width = "100%", src = "https://static.toiimg.com/photo/62033069.cms")
+          img(height = 347, width = "100%", src = "wonder_guesser.png")
       )
     }
   })
@@ -132,9 +132,12 @@ server <- function(input, output, session) {
   output$rules_modal <- renderReact({
     Dialog(
       type = 0,
-      title = 'WondeR GuesseR Rules',
+      title = 'WondeR GuesseR',
       closeButtonAriaLabel = 'Close',
       div(
+        h3("About:"),
+        p("Wonder Guesser is a game that tests your knowledge of the wonders of the world, be it industrial or natural.
+          Try to locate each wonder from a curated list of 37 amazing wonders."),
         h3("How to play:"),
         tags$ol(
           tags$li("Click on start button to start the game"),
