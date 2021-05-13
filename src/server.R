@@ -226,7 +226,7 @@ server <- function(input, output, session) {
       title = 'WondeR GuesseR',
       closeButtonAriaLabel = 'Close',
       div(
-        h4("Wonder Guesser is a game that tests your knowledge of 37 curated wonders of the world."),
+        h4("Wonder Guesser is a game that tests your knowledge of 38 curated wonders of the world."),
         h4("These range from natural wonders to industrial achievements. Try to locate each wonder on the map."),
         h3("How to play:"),
         tags$ol(
